@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/MockAuthContext';
+import { useAuth } from '../contexts/MockAuthContext.tsx';
 import { 
   Stethoscope, 
   Users, 
@@ -11,7 +11,8 @@ import {
   Home,
   MessageCircle,
   Search,
-  X
+  X,
+  Filter
 } from 'lucide-react';
 
 const DoctorDashboard = () => {
@@ -27,6 +28,7 @@ const DoctorDashboard = () => {
     duration: '',
     instructions: ''
   });
+  const [consultationNotes, setConsultationNotes] = useState('');
 
 
   const sidebarItems = [
@@ -96,6 +98,24 @@ const DoctorDashboard = () => {
   const handleStartTeleconsult = () => {
     if (selectedPatient) {
       setShowTeleconsultModal(true);
+    } else {
+      alert('Please select a patient first');
+    }
+  };
+
+  const handleCallPatient = () => {
+    if (selectedPatient) {
+      alert(`Calling ${selectedPatient.name}...`);
+    } else {
+      alert('Please select a patient first');
+    }
+  };
+
+  const handleChatPatient = () => {
+    if (selectedPatient) {
+      alert(`Opening chat with ${selectedPatient.name}...`);
+    } else {
+      alert('Please select a patient first');
     }
   };
 
@@ -116,6 +136,18 @@ const DoctorDashboard = () => {
 
   const handleUploadFile = () => {
     alert('File uploaded successfully!');
+  };
+
+  const handleOpenCamera = () => {
+    alert('Opening camera for diagnostic photo...');
+  };
+
+  const handleBrowseFiles = () => {
+    alert('Opening file browser for document upload...');
+  };
+
+  const handleViewReport = (patient) => {
+    alert(`Opening report for ${patient}...`);
   };
 
   return (
@@ -303,7 +335,16 @@ const DoctorDashboard = () => {
                       <Video className="w-4 h-4" />
                       <span>Start Call</span>
                     </button>
-                    <button className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg">
+                    <button 
+                      onClick={handleCallPatient}
+                      className="bg-blue-500 hover:bg-blue-600 p-2 rounded-lg text-white"
+                    >
+                      📞
+                    </button>
+                    <button 
+                      onClick={handleChatPatient}
+                      className="bg-gray-200 hover:bg-gray-300 p-2 rounded-lg"
+                    >
                       <MessageCircle className="w-4 h-4 text-gray-600" />
                     </button>
                   </div>
@@ -408,7 +449,10 @@ const DoctorDashboard = () => {
                         </span>
                       </td>
                       <td className="py-4">
-                        <button className="text-blue-500 hover:text-blue-600 text-sm">
+                        <button 
+                          onClick={() => handleViewReport(report.patient)}
+                          className="text-blue-500 hover:text-blue-600 text-sm"
+                        >
                           View Report
                         </button>
                       </td>
@@ -417,6 +461,105 @@ const DoctorDashboard = () => {
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+
+        {/* Additional Features from Screenshots */}
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Patient Vitals Entry */}
+          <div className="glass-card rounded-2xl p-6">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Patient Vitals Entry</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Blood Pressure (mmHg)</label>
+                <input
+                  type="text"
+                  placeholder="120/80"
+                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Heart Rate (bpm)</label>
+                <input
+                  type="text"
+                  placeholder="72"
+                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Temperature (°F)</label>
+                <input
+                  type="text"
+                  placeholder="98.6"
+                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">SpO2 (%)</label>
+                <input
+                  type="text"
+                  placeholder="98"
+                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400"
+                />
+              </div>
+            </div>
+            <button className="w-full mt-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-3 rounded-lg font-semibold">
+              Save Vitals & Generate Report
+            </button>
+          </div>
+
+          {/* AI Risk Assessment */}
+          <div className="glass-card rounded-2xl p-6">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">AI Risk Assessment</h3>
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span className="text-green-600 font-semibold">Risk Level: Low</span>
+            </div>
+            <p className="text-gray-600">Vitals within normal range</p>
+          </div>
+        </div>
+
+        {/* Upload Diagnostic Scan */}
+        <div className="mt-8">
+          <div className="glass-card rounded-2xl p-6">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Upload Diagnostic Scan</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Video className="w-6 h-6 text-blue-600" />
+                </div>
+                <h4 className="font-semibold text-gray-800 mb-2">Take Photo</h4>
+                <button 
+                  onClick={handleOpenCamera}
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg"
+                >
+                  Open Camera
+                </button>
+              </div>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-6 h-6 text-green-600" />
+                </div>
+                <h4 className="font-semibold text-gray-800 mb-2">Upload Document</h4>
+                <button 
+                  onClick={handleBrowseFiles}
+                  className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg"
+                >
+                  Browse Files
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Notes/Observations */}
+        <div className="mt-8">
+          <div className="glass-card rounded-2xl p-6">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Notes/Observations</h3>
+            <textarea
+              placeholder="Enter patient observations, symptoms, and notes..."
+              className="w-full p-4 border border-gray-200 rounded-lg h-32 focus:ring-2 focus:ring-green-400 resize-none"
+            />
           </div>
         </div>
       </div>

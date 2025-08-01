@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/MockAuthContext';
+import { useAuth } from '../contexts/MockAuthContext.tsx';
 import { 
   User, 
   AlertTriangle, 
@@ -31,7 +31,7 @@ const PatientDashboard = () => {
   const [showPhoneCallModal, setShowPhoneCallModal] = useState(false);
   const [aiResponse, setAiResponse] = useState('');
   const [chatMessage, setChatMessage] = useState('');
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [bookingData, setBookingData] = useState({
     specialty: '',
     date: '',
@@ -55,7 +55,14 @@ const PatientDashboard = () => {
     { name: 'Dr. Sunita Rao', specialty: 'Pediatrics', lastConsult: '2 weeks ago', rating: 4.7, image: 'https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=300&h=300' }
   ];
 
-  const prescriptions = [
+  interface Prescription {
+    medicine: string;
+    doctor: string;
+    date: string;
+    status: 'Active' | 'Completed';
+  }
+
+  const prescriptions: Prescription[] = [
     { medicine: 'Paracetamol 500mg', doctor: 'Dr. Priya Sharma', date: '2024-12-15', status: 'Active' },
     { medicine: 'Vitamin D3', doctor: 'Dr. Rajesh Kumar', date: '2024-12-10', status: 'Completed' },
     { medicine: 'Iron Tablets', doctor: 'Dr. Sunita Rao', date: '2024-12-08', status: 'Active' }
@@ -65,7 +72,7 @@ const PatientDashboard = () => {
     setShowBookingModal(true);
   };
 
-  const handleBookingSubmit = (e) => {
+  const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setShowBookingModal(false);
     // Show success message
@@ -76,8 +83,8 @@ const PatientDashboard = () => {
     setShowUploadModal(true);
   };
 
-  const handleFileUpload = (e) => {
-    const files = Array.from(e.target.files);
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
     setUploadedFiles([...uploadedFiles, ...files]);
     setShowUploadModal(false);
     alert('Files uploaded successfully!');
@@ -111,7 +118,7 @@ const PatientDashboard = () => {
     setShowPhoneCallModal(true);
   };
 
-  const handleDownloadPrescription = (prescription) => {
+  const handleDownloadPrescription = (prescription: Prescription) => {
     // Simulate download
     alert(`Downloading prescription for ${prescription.medicine}`);
   };
@@ -124,7 +131,7 @@ const PatientDashboard = () => {
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
             <Heart className="text-white w-6 h-6" />
           </div>
-          <span className="text-xl font-bold text-gray-800">HealthRural</span>
+          <span className="text-xl font-bold text-gray-800">SanjeevaniRural Med</span>
         </div>
 
         <nav className="space-y-2">

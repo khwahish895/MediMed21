@@ -1,7 +1,7 @@
-import React from 'react';
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/MockAuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './contexts/MockAuthContext.tsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import LandingPage from './pages/LandingPage';
 import PatientDashboard from './pages/PatientDashboard';
 import DoctorDashboard from './pages/DoctorDashboard';

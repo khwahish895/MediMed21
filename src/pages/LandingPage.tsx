@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/MockAuthContext';
+import { useAuth } from '../contexts/MockAuthContext.tsx';
 import { 
   Search, 
   MapPin, 
@@ -40,6 +40,7 @@ const LandingPage = () => {
   const [loginError, setLoginError] = useState('');
   const [registerError, setRegisterError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showServiceModal, setShowServiceModal] = useState(false);
 
   const services = [
     {
@@ -189,14 +190,36 @@ const LandingPage = () => {
   };
 
   const handleSearchServices = () => {
-    // Navigate to services page with search parameters
-    navigate('/booking', { 
-      state: { 
-        service: searchQuery, 
-        location: location, 
-        date: selectedDate 
-      } 
-    });
+    if (searchQuery.trim()) {
+      // Filter services based on search query
+      const filteredServices = services.filter(service => 
+        service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      
+      if (filteredServices.length > 0) {
+        // Navigate to the first matching service
+        navigate(filteredServices[0].path, { 
+          state: { 
+            service: searchQuery, 
+            location: location, 
+            date: selectedDate 
+          } 
+        });
+      } else {
+        // Navigate to general booking page
+        navigate('/booking/diagnostic-vans', { 
+          state: { 
+            service: searchQuery, 
+            location: location, 
+            date: selectedDate 
+          } 
+        });
+      }
+    } else {
+      // If no search query, navigate to general booking
+      navigate('/booking/diagnostic-vans');
+    }
   };
 
   return (
@@ -219,7 +242,7 @@ const LandingPage = () => {
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
                 <Heart className="text-white w-6 h-6" />
               </div>
-              <span className="text-xl font-bold text-white">HealthRural</span>
+              <span className="text-xl font-bold text-white">SanjeevaniRural Med</span>
             </div>
             <div className="flex space-x-4">
               <button 
@@ -362,7 +385,7 @@ const LandingPage = () => {
 
           {/* CTA Button */}
           <button 
-            onClick={() => navigate('/patient-dashboard')}
+            onClick={() => setShowServiceModal(true)}
             className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 px-12 py-4 rounded-2xl text-white text-xl font-semibold glow-button shadow-2xl"
           >
             Book a Service Now
@@ -538,6 +561,48 @@ const LandingPage = () => {
               >
                 {isLoading ? 'Registering...' : 'Register'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Service Selection Modal */}
+      {showServiceModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 max-w-4xl w-full mx-4">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Select a Service</h2>
+              <button 
+                onClick={() => setShowServiceModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {services.map((service, index) => {
+                const Icon = service.icon;
+                return (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      setShowServiceModal(false);
+                      navigate(service.path);
+                    }}
+                    className="border border-gray-200 rounded-xl p-6 cursor-pointer hover:border-blue-300 hover:shadow-lg transition-all"
+                  >
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${service.color} flex items-center justify-center mb-4`}>
+                      <Icon className="text-white w-6 h-6" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">{service.title}</h3>
+                    <p className="text-gray-600 text-sm mb-4">{service.description}</p>
+                    <button className="text-blue-500 hover:text-blue-600 font-medium">
+                      Book Now →
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

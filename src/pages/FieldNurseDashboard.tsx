@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/MockAuthContext';
+import { useAuth } from '../contexts/MockAuthContext.tsx';
 import { 
   Heart, 
   Upload, 
@@ -56,6 +56,14 @@ const FieldNurseDashboard = () => {
 
   const handleVitalChange = (field, value) => {
     setVitals(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleEmergencyCall = () => {
+    alert('Calling emergency services...');
+  };
+
+  const handleAlertHospital = () => {
+    alert('Alert sent to nearest hospital!');
   };
 
   const getRiskLevel = () => {
@@ -375,18 +383,13 @@ const FieldNurseDashboard = () => {
 
               <div className="space-y-2">
                 <button 
-                  onClick={() => {
-                    setShowEmergencyModal(true);
-                    setTimeout(() => setShowEmergencyModal(false), 2000);
-                  }}
+                  onClick={handleEmergencyCall}
                   className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-sm pulse-glow"
                 >
                   Call Emergency Services
                 </button>
                 <button 
-                  onClick={() => {
-                    alert('Alert sent to nearest hospital!');
-                  }}
+                  onClick={handleAlertHospital}
                   className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg text-sm"
                 >
                   Alert Nearest Hospital

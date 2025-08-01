@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Truck, Video, Building, CheckCircle } from 'lucide-react';
 
@@ -35,6 +35,7 @@ const BookingWrapper = ({ children, title, icon: Icon }) => {
 };
 
 const DiagnosticVansBooking = () => {
+  const location = useLocation();
   const [showSuccess, setShowSuccess] = useState(false);
   const [bookingData, setBookingData] = useState({
     location: '',
@@ -43,6 +44,17 @@ const DiagnosticVansBooking = () => {
     timeSlot: '',
     patientDetails: ''
   });
+
+  // Pre-fill form with search parameters
+  useEffect(() => {
+    if (location.state) {
+      setBookingData(prev => ({
+        ...prev,
+        location: location.state.location || '',
+        date: location.state.date || ''
+      }));
+    }
+  }, [location.state]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -149,6 +161,7 @@ const DiagnosticVansBooking = () => {
 };
 
 const TelemedicineBooking = () => {
+  const location = useLocation();
   const [showSuccess, setShowSuccess] = useState(false);
   const [bookingData, setBookingData] = useState({
     specialty: '',
@@ -157,6 +170,16 @@ const TelemedicineBooking = () => {
     time: '',
     symptoms: ''
   });
+
+  // Pre-fill form with search parameters
+  useEffect(() => {
+    if (location.state) {
+      setBookingData(prev => ({
+        ...prev,
+        date: location.state.date || ''
+      }));
+    }
+  }, [location.state]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -268,6 +291,7 @@ const TelemedicineBooking = () => {
 };
 
 const HealthPodsBooking = () => {
+  const location = useLocation();
   const [showSuccess, setShowSuccess] = useState(false);
   const [bookingData, setBookingData] = useState({
     location: '',
@@ -276,6 +300,17 @@ const HealthPodsBooking = () => {
     timeSlot: '',
     patientInfo: ''
   });
+
+  // Pre-fill form with search parameters
+  useEffect(() => {
+    if (location.state) {
+      setBookingData(prev => ({
+        ...prev,
+        location: location.state.location || '',
+        date: location.state.date || ''
+      }));
+    }
+  }, [location.state]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

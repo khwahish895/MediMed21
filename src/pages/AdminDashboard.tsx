@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/MockAuthContext';
+import { useAuth } from '../contexts/MockAuthContext.tsx';
+
 import { 
   Shield, 
   Users, 
@@ -71,7 +72,7 @@ const AdminDashboard = () => {
     { id: 3, patient: 'Mohan Singh', type: 'Breathing Issue', time: '2:15 PM', status: 'Pending', responder: 'Assigning...' }
   ];
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'Active': case 'Available': case 'On Duty': case 'Resolved': return 'text-green-600 bg-green-100';
       case 'Busy': case 'En Route': case 'Responding': return 'text-yellow-600 bg-yellow-100';
@@ -79,6 +80,11 @@ const AdminDashboard = () => {
       default: return 'text-gray-600 bg-gray-100';
     }
   };
+
+  const handleViewAllAlerts = () => {
+    alert('Opening all emergency alerts...');
+  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex">
@@ -266,7 +272,7 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {userData[selectedTab].map((user, index) => (
+                    {(userData as any)[selectedTab].map((user: any, index: number) => (
                       <tr key={index} className="border-b border-gray-100">
                         <td className="py-4 font-medium text-gray-800">{user.name}</td>
                         <td className="py-4 text-gray-600">
@@ -354,9 +360,7 @@ const AdminDashboard = () => {
               </div>
 
               <button 
-                onClick={() => {
-                  alert('Opening all emergency alerts...');
-                }}
+                onClick={handleViewAllAlerts}
                 className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-sm"
               >
                 View All Alerts
